@@ -21,9 +21,3 @@ void afficherMat(matrice_creuse m);
 
 int getValue(matrice_creuse m, int i, int j);
 
-void putValue(matrice_creuse m, int i, int j, int val);
-
-void addMat(matrice_creuse m1, matrice_creuse m2);
-
-int nombreOctetsGagnes(matrice_creuse m1);
-
