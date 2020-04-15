@@ -14,10 +14,10 @@ int main() {
       printf("Veuillez saisir votre choix de l'operation\n");
       printf("1. Remplir une matrice creuse\n");
       printf("2. Afficher une matrice creuse\n");
-      printf("3. Donner la valeur d¡¯un ¨¦l¨¦ment d¡¯une matrice creuse\n");
-      printf("4. Affecter une valeur ¨¤ un ¨¦l¨¦ment d¡¯une matrice creuse\n");
+      printf("3. Donner la valeur dun lment dune matrice creuse\n");
+      printf("4. Affecter une valeur  un lment dune matrice creuse\n");
       printf("5. Additionner deux matrices creuses\n");
-      printf("6. Calculer le gain en espace en utilisant cette repr¨¦sentation pour une matrice donn¨¦e\n");
+      printf("6. Calculer le gain en espace en utilisant cette reprsentation pour une matrice donne\n");
       printf("7. Quitter\n");
       scanf("%d",&choix);
       switch(choix){
@@ -44,7 +44,7 @@ int main() {
             scanf("%d",&ligne);
             printf("NB_colonne:\n");
             scanf("%d",&col);
-            if(ligne>tab_m[c3].Nlignes || col>tab_m[c3].Ncolonnes){
+            if(ligne>tab_m[c3].Nlignes || col>tab_m[c3].Ncolonnes || ligne<0 || col<0){
                 printf("Erreur!");
                 break;
             }
