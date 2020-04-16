@@ -57,7 +57,7 @@ int main() {
             scanf("%d",&ligne);
             printf("NB_colonne:\n");
             scanf("%d",&col);
-            if(ligne>tab_m[c4].Nlignes || col>tab_m[c4].Ncolonnes){
+            if(ligne>tab_m[c4].Nlignes || col>tab_m[c4].Ncolonnes || ligne<0 || col<0){
                 printf("Erreur!");
                 break;
             printf("Saisir la nouvelle valeur:\n")
