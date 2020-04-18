@@ -174,6 +174,7 @@ void addMat(struct matrice_creuse m1,struct matrice_creuse m2){
                          it->next=e;
                        }
                     }
+                it2=it2->next;  
             }
         }
     }
