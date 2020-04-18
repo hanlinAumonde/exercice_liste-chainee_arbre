@@ -9,7 +9,7 @@ int main() {
    int nb_m=0;
    matrice_creuse tab_m[NMAX];
    int a=1;
-   int choix,c2,c3,c4,v,ligne,col,reste;
+   int i,j,choix,c2,c3,c4,c6,v,ligne,col,reste;
    do{
       printf("Veuillez saisir votre choix de l'operation\n");
       printf("1. Remplir une matrice creuse\n");
@@ -65,15 +65,22 @@ int main() {
             putValue(tab_m[c4],ligne,col,v);
             break;
          case 5:
+            printf("Saisir les numeros des matrices m1 et m2:\n");
+            scanf("%d",&i)；
+            scanf("%d",&j);
+            addMat(tab_m[i],tab_m[j]);
             break;
          case 6:
+            printf("Saisir le numero de matrice m:\n");
+            scanf("%d",&c6);
+            printf("le nombre d’octets gagnés par m%d est %d\n",c6,nombreOctetsGagnes(tab_m[c6]));
             break;
          case 7:
             a=0;
             printf("\nTerminer");
             break;
          default:
-            printf("Veuillez ressaisir votre choix svp\n");
+            printf("Erreur!Veuillez ressaisir votre choix svp\n");
             break;
       }
       printf("\n\n");
