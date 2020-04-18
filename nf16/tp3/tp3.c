@@ -105,7 +105,7 @@ void putValue(struct matrice_creuse m,int i,int j,int val){
     if(getValue(m,i,j)==val){printf("Erreur!La valeur du m[%d,%d] n'a pas changé!",i,j);}  //ne pas entrer le meme valeur
     else{
         if(val=0){
-           if(getValue(m,i,j)!=0){       //val=0,m[i,j]!=0,c'est a dire qu'on doit supprimer la node[i,j] dans la liste
+           if(getValue(m,i,j)!=0){       //val=0,m[i,j]≠0,c'est a dire qu'on doit supprimer la node[i,j] dans la liste
               while(it->col<=j){
                   if(it->col == j){
                     e=it;
@@ -116,13 +116,13 @@ void putValue(struct matrice_creuse m,int i,int j,int val){
            }
         }
         else {
-           if(getValue(m,i,j)!=0){      //val!=0,m[i,j]!=0,on peut changer la valeur "it->val" de la node[i,j] directement avec "val"
+           if(getValue(m,i,j)!=0){      //val≠0,m[i,j]≠0,on peut changer la valeur "it->val" de la node[i,j] directement avec "val"
               while(it->col<=j){
                 if(it->col==j){it->val=val;}
               }
            }
            else {
-              if(it->col>j){                         //val!=0,m[i,j]=0,c'est a dire qu'on doit faire une insertion dans la liste
+              if(it->col>j){                         //val≠0,m[i,j]=0,c'est a dire qu'on doit faire une insertion dans la liste
                  e=malloc(sizeof(struct element));   //il existe deux cas,le premier cas est l'insertion tête de liste
                  e->val=val;
                  e->col=j;
@@ -141,3 +141,43 @@ void putValue(struct matrice_creuse m,int i,int j,int val){
         }
     }
 }
+
+
+//Q5
+void addMat(struct matrice_creuse m1,struct matrice_creuse m2){
+    int  i,j;
+    liste_ligne e;
+    for(i=0;i<m1.Nlignes;i++){              //pour chaqur ligne i,c'est la somme de deux liste chainé it1 et it2
+        liste_ligne it1=m1.lignes[i];
+        liste_ligne it2=m2.lignes[i];
+        for(j=0;j<m1.Ncolonnes;j++){
+            if(it1.col==j+1 && it2.col==j+1){      //il y a 3 cas,le 1er: m1[i,j] et m2[i,j] existent,directement faire la somme et mettre la résultat en m1[i,j]
+                  it1.val+=it2.val;
+                  it1=it1->next;               //c'est obligatoire de déplacer le pointeur sur le node suivant quand il existe un node en [i,j]
+                  it2=it2->next;               //donc pour le jeme coloone,le pointeur toujours pointe le node que (col de node) >= j
+            }
+            else if(it1.col==j+1 && it2.col!=j+1){it1=it1->next;}  //le 2eme cas:m1[i,j]≠0,m2[i,j]=0,donc m1[i,j] ne pas changer
+            else if(it1.col!=j+1 && it2.col==j+1){                //le 3eme cas:m1[i,j]=0,m2[i,j]≠0,donc on doit ajouter un nouveau node e en it1,e.val=it2.val
+                    if(j==0){                  //si j=0,on doit ajouter le node en tête de liste
+                       e=malloc(sizeof(struct element));
+                       e->val=it2->val;
+                       e->col=j+1;
+                       e->next=it1;
+                    }
+                    else {                    //si j≠0,on doit ajouter le nouveau node entre deux node de liste
+                       liste_ligne it=m1.lignes[i];
+                       while(it->next->col<j+1){
+                         e=malloc(sizeof(struct element));
+                         e->val=it2->val;
+                         e->col=j+1;
+                         e->next=it1;
+                         it->next=e;
+                       }
+                    }
+            }
+        }
+    }
+    printf("La nouvelle matrice:\n");
+    afficherMat(struct matrice_creuse m1);
+}
+
