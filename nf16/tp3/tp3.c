@@ -98,3 +98,46 @@ int getValue(struct matrice_creuse m,int i,int j){
 
 
 
+//Q4
+void putValue(struct matrice_creuse m,int i,int j,int val){
+    ligne_liste e;
+    ligne_liste it=m.lignes[i];
+    if(getValue(m,i,j)==val){printf("Erreur!La valeur du m[%d,%d] n'a pas changé!",i,j);}  //ne pas entrer le meme valeur
+    else{
+        if(val=0){
+           if(getValue(m,i,j)!=0){       //val=0,m[i,j]!=0,c'est a dire qu'on doit supprimer la node[i,j] dans la liste
+              while(it->col<=j){
+                  if(it->col == j){
+                    e=it;
+                    it=it->next;
+                    free(e);
+                  }
+              }
+           }
+        }
+        else {
+           if(getValue(m,i,j)!=0){      //val!=0,m[i,j]!=0,on peut changer la valeur "it->val" de la node[i,j] directement avec "val"
+              while(it->col<=j){
+                if(it->col==j){it->val=val;}
+              }
+           }
+           else {
+              if(it->col>j){                         //val!=0,m[i,j]=0,c'est a dire qu'on doit faire une insertion dans la liste
+                 e=malloc(sizeof(struct element));   //il existe deux cas,le premier cas est l'insertion tête de liste
+                 e->val=val;
+                 e->col=j;
+                 e->next=it;
+              }
+              else{                                  //le 2eme cas est l'insertion entre deux node de la liste
+                while(it->next->col<j){it=it->next;}
+                 e=malloc(sizeof(struct element));
+                 e->val=val;
+                 e->col=j;
+                 e->next=it->next;
+                 it->next=e;
+              }
+           }
+
+        }
+    }
+}
