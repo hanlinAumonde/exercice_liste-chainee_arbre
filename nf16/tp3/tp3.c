@@ -4,6 +4,81 @@
 
 #include "tp3.h"
 
+//Q1
+
+static liste_ligne creerNode(int val, int col) {
+    liste_ligne node = malloc(sizeof(struct element));
+    node->col = col;
+    node->val = val;
+    node->next = NULL;
+    return node;
+}
+
+static void creerLigne(liste_ligne *firstLigne , int line, int  NbCol) {
+    liste_ligne it; // = *firstLigne; //premier node de la ligne
+    for (int i = 0 ; i < NbCol; i++) {
+        int val;
+        printf("M[%d][%d]\t", line, i);
+        printf("rentrez un entier : ");
+        scanf(" %d", &val);
+        if (val == 0)
+            continue;
+        liste_ligne node = creerNode(val, i);
+        if (*firstLigne == NULL) {
+            *firstLigne = node;
+            it = *firstLigne;
+        } else {
+            it->next = node;
+            it = it->next;
+        }
+    }
+    return;
+}
+
+void remplirMat(struct matrice_creuse *m, int N, int M) {
+    printf("========= Remplissage de la matrice =========\n");
+
+    m->Nlignes = N;
+    m->Ncolonnes = M;
+    m->lignes = malloc(N*sizeof(liste_ligne));
+    memset(m->lignes, 0, N*sizeof(liste_ligne));
+    for(int i = 0; i < N; i++) {
+        creerLigne(&(m->lignes[i]),i, M);
+    }
+
+}
+
+
+//Q2
+
+void afficherMat(struct matrice_creuse m) {
+    printf("========= Affichage de la matrice =========\n");
+    int col = 1;
+    for (int i = 0; i < m.Nlignes; i++) {
+        if (m.lignes[i] == NULL) {      //si le premier est nulle, afficher une ligne de 0, comme ça pas besoin de refaire les tests à chaque itération
+            for (int i = 0; i < m.Ncolonnes; i++)
+                printf("0\t");
+        } else {
+            int col = 0; //init
+            liste_ligne it = m.lignes[i]; //premier node de la ligne
+            for (int j = 0; j < m.Ncolonnes; j++) {
+                if (it != NULL) {
+                    if(it->col != j) {
+                        printf("0\t");
+                    } else {
+                        printf("%d\t", it->val);
+                        it = it->next;
+                    }
+                } else
+                    printf("0\t");
+            }
+        }
+        printf("\n");
+    }
+}
+
+
+
 //Q3
 int getValue(struct matrice_creuse m,int i,int j){
     int res;
