@@ -65,8 +65,9 @@ int main() {
             putValue(tab_m[c4],ligne,col,v);
             break;
          case 5:
-            printf("Saisir les numeros des matrices m1 et m2:\n");
+            printf("Saisir le numero de matrice m1:\n");
             scanf("%d",&i)；
+            printf("Saisir le numero de matrice m2:\n");
             scanf("%d",&j);
             addMat(tab_m[i],tab_m[j]);
             break;
