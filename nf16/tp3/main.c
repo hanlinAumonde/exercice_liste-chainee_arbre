@@ -3,13 +3,13 @@
 #include <string.h>
 
 #include "tp3.h"
-#include "tp3.c"
+
 #define NMAX 100
 int main() {
    int nb_m=0;
-   matrice_creuse tab_m[NMAX];
+   struct matrice_creuse tab_m[NMAX];
    int a=1;
-   int i,j,choix,c2,c3,c4,c6,v,ligne,col,reste;
+   int i,j,val,choix,c,v,ligne,col,reste;
    do{
       printf("Veuillez saisir votre choix de l'operation\n");
       printf("1. Remplir une matrice creuse\n");
@@ -22,59 +22,53 @@ int main() {
       scanf("%d",&choix);
       switch(choix){
          case 1:
-           printf("Attention:Vous pouvez entrer totalement 100 matrices");
+           printf("Attention:Vous pouvez entrer totalement 100 matrices\n");
            reste=100-nb_m;
-           printf("Et maintenant,il reste %d matrices que vous pouvez entrer",reste);
+           printf("Et maintenant,il reste %d matrices que vous pouvez entrer\n",reste);
            printf("Pour la %d eme matrice,entrez sa nb_ligne:\n",nb_m+1);
            scanf("%d",&ligne);
            printf("Puis sa nb_col:\n");
            scanf("%d",&col);
            remplirMat(&tab_m[nb_m],ligne,col);
            nb_m++;
+           printf("La matrice est bien saisie\n");
            break;
          case 2:
             printf("Votre choix de l'affichage:\n");
-            scanf("%d",&c2);
-            afficherMat(tab_m[c2]);
+            scanf("%d",&c);
+            afficherMat(tab_m[c]);
             break;
          case 3:
             printf("Votre choix de la matrice:\n");
-            scanf("%d",&c3);
+            scanf("%d",&c);
             printf("NB_ligne:\n");
             scanf("%d",&ligne);
             printf("NB_colonne:\n");
             scanf("%d",&col);
-            if(ligne>tab_m[c3].Nlignes || col>tab_m[c3].Ncolonnes || ligne<0 || col<0){
-                printf("Erreur!");
-                break;
-            }
-            printf("La valeur est %d\n",getValue(tab_m[c3]),ligne,col);
+            val=getValue(tab_m[c],ligne,col);
+            printf("la valeur est %d",val);
             break;
          case 4:
             printf("Votre choix de la matrice:\n");
-            scanf("%d",&c4);
+            scanf("%d",&c);
             printf("NB_ligne:\n");
             scanf("%d",&ligne);
             printf("NB_colonne:\n");
             scanf("%d",&col);
-            if(ligne>tab_m[c4].Nlignes || col>tab_m[c4].Ncolonnes || ligne<0 || col<0){
-                printf("Erreur!");
-                break;
-            printf("Saisir la nouvelle valeur:\n")
+            printf("Saisir la nouvelle valeur:\n");
             scanf("%d",&v);
-            putValue(tab_m[c4],ligne,col,v);
+            putValue(tab_m[c],ligne,col,v);
             break;
          case 5:
             printf("Saisir le numero de matrice m1:\n");
-            scanf("%d",&i)；
+            scanf("%d",&i);
             printf("Saisir le numero de matrice m2:\n");
             scanf("%d",&j);
-            addMat(tab_m[i],tab_m[j]);
             break;
          case 6:
             printf("Saisir le numero de matrice m:\n");
-            scanf("%d",&c6);
-            printf("le nombre d’octets gagnés par m%d est %d\n",c6,nombreOctetsGagnes(tab_m[c6]));
+            scanf("%d",&c);
+            printf("les octets gagne: %d\n",nombreOctetsGagnes(tab_m[c]));
             break;
          case 7:
             a=0;
@@ -86,4 +80,5 @@ int main() {
       }
       printf("\n\n");
    }while(a!=0);
+
 }
