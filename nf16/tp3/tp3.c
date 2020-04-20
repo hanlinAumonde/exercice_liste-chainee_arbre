@@ -1,8 +1,7 @@
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
 
-#include "tp3.h"
+#include "ttp3.h"
+
+
 
 //Q1
 
@@ -26,13 +25,14 @@ static void creerLigne(liste_ligne *firstLigne , int line, int  NbCol) {
         liste_ligne node = creerNode(val, i);
         if (*firstLigne == NULL) {
             *firstLigne = node;
-            it = *firstLigne;
+            it=*firstLigne;
         } else {
+            while(it->next!=NULL){
+                it = it->next;
+            }
             it->next = node;
-            it = it->next;
         }
     }
-    return;
 }
 
 void remplirMat(struct matrice_creuse *m, int N, int M) {
@@ -49,17 +49,15 @@ void remplirMat(struct matrice_creuse *m, int N, int M) {
 }
 
 
-//Q2
+//Question 2
 
 void afficherMat(struct matrice_creuse m) {
     printf("========= Affichage de la matrice =========\n");
-    int col = 1;
     for (int i = 0; i < m.Nlignes; i++) {
         if (m.lignes[i] == NULL) {      //si le premier est nulle, afficher une ligne de 0, comme ça pas besoin de refaire les tests à chaque itération
             for (int i = 0; i < m.Ncolonnes; i++)
                 printf("0\t");
         } else {
-            int col = 0; //init
             liste_ligne it = m.lignes[i]; //premier node de la ligne
             for (int j = 0; j < m.Ncolonnes; j++) {
                 if (it != NULL) {
@@ -79,106 +77,107 @@ void afficherMat(struct matrice_creuse m) {
 
 
 
+
 //Q3
 int getValue(struct matrice_creuse m,int i,int j){
-    int res;
-    ligne_liste it=m.lignes[i];
-    if(m.lignes[i] == NULL){//si le premier node est null,toutes les valeurs dans cette ligne sont 0,y compris celui que nous recherchons
-        res=0;
-    }
-       else{
-           while(it!=NULL && it->col<=j){        //1er cas: le résultat est 0,et j est avant le premier node du m.ligne[i]
-             if(it->col == j){res=it->val;}      //2eme cas:le résultat est "it->val",et itt->col=j
-             else {it=it->next;}                 //3eme cas:le résultat est 0,et j compris entre deux node du m.ligne[i] 
-           }                                           //4eme cas:le résultat est 0,et j est apres le dernier node du m.ligne[i]
-           if(it->col<>j || it=NULL) {res=0;}
-       }                                               //*on a le 2eme cas dans le boucle while,
-    return res;                                        //*pour le 1er cas,puisque la condition 'it->col<=j' est faux au début,le boucle ne s'exécutera pas,pcq it->col<>j,on a res=0
-}                                                      //*si le boucle peut s'exécuter,apres le boucle,'it->col<>j' correspond au 3eme cas,'it=NULL' correspond au 4eme cas
+    if(i>m.Nlignes-1 || j>m.Ncolonnes-1 || i<0 || j<0){
+                printf("Erreur!");
+                exit(-1);
+            }
+    else{
+            liste_ligne it=m.lignes[i];
+            if(it == NULL){
+               return 0;
+            }else{
+               while(it!=NULL){
+                   if(it->col==j){return it->val;}
+                   else {it=it->next;}
+               }
+            }
+     }
+     return 0;
+}
+
 
 
 
 //Q4
-void putValue(struct matrice_creuse m,int i,int j,int val){
-    ligne_liste e;
-    ligne_liste it=m.lignes[i];
-    if(getValue(m,i,j)==val){printf("Erreur!La valeur du m[%d,%d] n'a pas changé!",i,j);}  //ne pas entrer le meme valeur
-    else{
-        if(val=0){
-           if(getValue(m,i,j)!=0){       //val=0,m[i,j]≠0,c'est a dire qu'on doit supprimer la node[i,j] dans la liste
-              while(it->col<=j){
-                  if(it->col == j){
-                    e=it;
-                    it=it->next;
-                    free(e);
-                  }
-              }
-           }
-        }
-        else {
-           if(getValue(m,i,j)!=0){      //val≠0,m[i,j]≠0,on peut changer la valeur "it->val" de la node[i,j] directement avec "val"
-              while(it->col<=j){
-                if(it->col==j){it->val=val;}
-              }
-           }
-           else {
-              if(it->col>j){                         //val≠0,m[i,j]=0,c'est a dire qu'on doit faire une insertion dans la liste
-                 e=malloc(sizeof(struct element));   //il existe deux cas,le premier cas est l'insertion tête de liste
-                 e->val=val;
-                 e->col=j;
-                 e->next=it;
-              }
-              else{                                  //le 2eme cas est l'insertion entre deux node de la liste
-                while(it->next->col<j){it=it->next;}
-                 e=malloc(sizeof(struct element));
-                 e->val=val;
-                 e->col=j;
-                 e->next=it->next;
-                 it->next=e;
-              }
-           }
+static liste_ligne pred(liste_ligne *tab,liste_ligne it){
+     liste_ligne e;
+     if(it==*tab){return NULL;}
+     else{
+        e=*tab;
+        while(e->next!=it){e=e->next;}
+        return e;
+     }
+}
 
-        }
-    }
+void putValue(struct matrice_creuse m,int i,int j,int val){
+      if(i>m.Nlignes-1 || j>m.Ncolonnes-1 || i<0 || j<0){
+                printf("Erreur!");
+                exit(-1);
+            }
+      liste_ligne e;
+      liste_ligne it=m.lignes[i];
+      while((it!=NULL) && (it->col!=j)){it=it->next;}
+      if(val==getValue(m,i,j)){printf("Erreur!La valeur n'a pas change!");}
+      else if(val==0){               //val=0,m[i,j]≠0,c-a-d le suppression d'un node
+          if(pred(&(m.lignes[i]),it)!=NULL){     //supprimer un node entre deux autres nodes
+              pred(&(m.lignes[i]),it)->next=it->next;
+              free(it);
+          }else{               //supprimer un node en tete de liste
+              e=m.lignes[i];
+              m.lignes[i]=m.lignes[i]->next;
+              free(e);
+          }
+      }else if(val!=0){
+          if(getValue(m,i,j)!=0){    //val≠0,m[i,j]≠0
+              it->val=val;
+          }else{        //val≠0,m[i,j]=0,c-a-d l'insertion d'un node
+              liste_ligne it1=m.lignes[i];
+              e=malloc(sizeof(struct element));
+              e->val=val;
+              e->col=j;
+              if(m.lignes[i]==NULL){m.lignes[i]=e;}  //si la liste est vide
+              while(it1!=NULL){
+                    if(it1->col>j){
+                        e->next=m.lignes[i];
+                        m.lignes[i]=e;
+                        break;
+                    }
+                    if((it1->col<j) && (it1->next->col>j)){  //(il y a qlq erreur,je sais pas pq QAQ)
+                        e->next=it1->next;
+                        it1->next=e;
+                        break;
+                    }
+                    if((it1->col<j) && (it1->next==NULL)){   //(il y a qlq erreur,je sais pas pq QAQ)
+                        it1->next=e;
+                        e->next=NULL;
+                        break;
+                    }
+                    it1=it1->next;
+                }
+
+          }
+       }
+       printf("La nouvelle matrice:\n");
+       afficherMat(m);
 }
 
 
-//Q5
-void addMat(struct matrice_creuse m1,struct matrice_creuse m2){
-    int  i,j;
-    liste_ligne e;
-    for(i=0;i<m1.Nlignes;i++){              //pour chaqur ligne i,c'est la somme de deux liste chainé it1 et it2
-        liste_ligne it1=m1.lignes[i];
-        liste_ligne it2=m2.lignes[i];
-        for(j=0;j<m1.Ncolonnes;j++){
-            if(it1.col==j+1 && it2.col==j+1){      //il y a 3 cas,le 1er: m1[i,j] et m2[i,j] existent,directement faire la somme et mettre la résultat en m1[i,j]
-                  it1.val+=it2.val;
-                  it1=it1->next;               //c'est obligatoire de déplacer le pointeur sur le node suivant quand il existe un node en [i,j]
-                  it2=it2->next;               //donc pour le jeme coloone,le pointeur toujours pointe le node que (col de node) >= j
-            }
-            else if(it1.col==j+1 && it2.col!=j+1){it1=it1->next;}  //le 2eme cas:m1[i,j]≠0,m2[i,j]=0,donc m1[i,j] ne pas changer
-            else if(it1.col!=j+1 && it2.col==j+1){                //le 3eme cas:m1[i,j]=0,m2[i,j]≠0,donc on doit ajouter un nouveau node e en it1,e.val=it2.val
-                    if(j==0){                  //si j=0,on doit ajouter le node en tête de liste
-                       e=malloc(sizeof(struct element));
-                       e->val=it2->val;
-                       e->col=j+1;
-                       e->next=it1;
-                    }
-                    else {                    //si j≠0,on doit ajouter le nouveau node entre deux node de liste
-                       liste_ligne it=m1.lignes[i];
-                       while(it->next->col<j+1){
-                         e=malloc(sizeof(struct element));
-                         e->val=it2->val;
-                         e->col=j+1;
-                         e->next=it1;
-                         it->next=e;
-                       }
-                    }
-                it2=it2->next;  
-            }
+
+
+//Q6
+int nombreOctetsGagnes(struct matrice_creuse m){
+    int res=0;
+    for(int i=0;i<m.Nlignes;i++){
+        liste_ligne it=m.lignes[i];
+        while(it!=NULL){
+            res+=2*sizeof(int)+sizeof(int*);
+            it=it->next;
         }
     }
-    printf("La nouvelle matrice:\n");
-    afficherMat(struct matrice_creuse m1);
+    int nb=(m.Nlignes*m.Ncolonnes)*sizeof(int);
+    return nb-res;
 }
 
