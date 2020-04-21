@@ -14,8 +14,8 @@ int main() {
       printf("Veuillez saisir votre choix de l'operation\n");
       printf("1. Remplir une matrice creuse\n");
       printf("2. Afficher une matrice creuse\n");
-      printf("3. Donner la valeur dun lment dune matrice creuse\n");
-      printf("4. Affecter une valeur  un lment dune matrice creuse\n");
+      printf("3. Donner la valeur d'un element d'une matrice creuse\n");
+      printf("4. Affecter une valeur un element d'une matrice creuse\n");
       printf("5. Additionner deux matrices creuses\n");
       printf("6. Calculer le gain en espace en utilisant cette reprsentation pour une matrice donne\n");
       printf("7. Quitter\n");
@@ -29,6 +29,10 @@ int main() {
            scanf("%d",&ligne);
            printf("Puis sa nb_col:\n");
            scanf("%d",&col);
+           if( ligne<=0 || col<=0){
+                printf("Erreur!");
+                break;
+            }
            remplirMat(&tab_m[nb_m],ligne,col);
            nb_m++;
            printf("La matrice est bien saisie\n");
@@ -45,6 +49,10 @@ int main() {
             scanf("%d",&ligne);
             printf("NB_colonne:\n");
             scanf("%d",&col);
+            if(i>tab_m[c].Nlignes-1 || j>tab_m[c].Ncolonnes-1 || i<0 || j<0){
+                printf("Erreur!");
+                break;
+            }
             val=getValue(tab_m[c],ligne,col);
             printf("la valeur est %d",val);
             break;
@@ -55,6 +63,10 @@ int main() {
             scanf("%d",&ligne);
             printf("NB_colonne:\n");
             scanf("%d",&col);
+            if(ligne>tab_m[c].Nlignes-1 || col>tab_m[c].Ncolonnes-1 || ligne<0 || col<0){
+                printf("Erreur!");
+                break;
+            }
             printf("Saisir la nouvelle valeur:\n");
             scanf("%d",&v);
             putValue(tab_m[c],ligne,col,v);
@@ -64,11 +76,15 @@ int main() {
             scanf("%d",&i);
             printf("Saisir le numero de matrice m2:\n");
             scanf("%d",&j);
+            addMat(tab_m[i],tab_m[j]);
             break;
          case 6:
             printf("Saisir le numero de matrice m:\n");
             scanf("%d",&c);
-            printf("les octets gagne: %d\n",nombreOctetsGagnes(tab_m[c]));
+            if(nombreOctetsGagnes(tab_m[c])<0){printf("il ne gagne pas d'octet\n");}
+            else{
+               printf("les octets gagne: %d\n",nombreOctetsGagnes(tab_m[c]));
+            }
             break;
          case 7:
             a=0;
@@ -80,5 +96,5 @@ int main() {
       }
       printf("\n\n");
    }while(a!=0);
-
+   return 0;
 }
