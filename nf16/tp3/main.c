@@ -71,7 +71,7 @@ int main() {
             scanf("%d",&ligne);
             printf("NB_colonne:\n");
             scanf("%d",&col);
-            if(ligne>tab_m[c-1].Nlignes-1 || col>tab_m[c-1].Ncolonnes-1 || ligne<0 || col<0){
+            if(ligne>tab_m[c-1].Nlignes || col>tab_m[c-1].Ncolonnes || ligne<0 || col<0){
                 printf("Erreur!");
                 break;
             }
