@@ -170,7 +170,7 @@ void addMat(struct matrice_creuse m1,struct matrice_creuse m2){
             if(it1->col==j && it2->col==j){      // m1[i,j] et m2[i,j] existent,directement faire la somme et mettre la r¨¦sultat en m1[i,j]
                   it1->val=it1->val+it2->val;
                   it2=it2->next;     //c'est obligatoire de d¨¦placer le pointeur sur le node suivant quand il existe un node en [i,j],donc pour le jeme coloone,le pointeur toujours pointe le node que (col de node) >= j
-                  if(it1->val==0){                     //si le nouveau val est 0,on doit supprimer ce node
+                  if(it1->val==0){                     //si le nouveau val est 0,on doit supprimer ce node,ex:-1 + 1 = 0
                       if(pred(&(m1.lignes[i]),it1)!=NULL){     //supprimer un node entre deux autres nodes
                         e=it1->next;
                         pred(&(m1.lignes[i]),it1)->next=it1->next;
