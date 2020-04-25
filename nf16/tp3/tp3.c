@@ -1,4 +1,3 @@
-
 #include "tp3.h"
 
 
@@ -138,7 +137,7 @@ void putValue(struct matrice_creuse m,int i,int j,int val){
                         break;
                     }
                     if((it1->col<j) && (it2==NULL)){     //node->node->j(fin)
-                        it1->next=e;                     //(pour ce cas,je sais pas pq ca marche pas QAQ)
+                        it1->next=e;                   
                         break;
                     }
                     if((it1->col<j) && (it2->col>j)){   //node->node->j->node.....
