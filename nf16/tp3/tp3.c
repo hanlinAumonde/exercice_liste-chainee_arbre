@@ -1,3 +1,4 @@
+
 #include "tp3.h"
 
 
@@ -19,17 +20,18 @@ static void creerLigne(liste_ligne *firstLigne , int line, int  NbCol) {
         printf("M[%d][%d]\t", line, i+1);
         printf("rentrez un entier : ");
         scanf(" %d", &val);
-        if (val == 0)
-            continue;
-        liste_ligne node = creerNode(val, i+1);
-        if (*firstLigne == NULL) {
-            *firstLigne = node;
-            it=*firstLigne;
-        } else {
-            while(it->next!=NULL){
-                it = it->next;
-            }
-            it->next = node;
+        if (val == 0){continue;}
+        else{
+           liste_ligne node = creerNode(val, i+1);
+           if (*firstLigne == NULL) {
+               *firstLigne = node;
+               it=*firstLigne;
+           } else {
+               while(it->next!=NULL){
+                   it = it->next;
+               }
+           it->next = node;
+           }
         }
     }
 }
@@ -110,11 +112,7 @@ void putValue(struct matrice_creuse m,int i,int j,int val){
       liste_ligne e;
       liste_ligne it=m.lignes[i];
       while((it!=NULL) && (it->col!=j)){it=it->next;}
-      if(val==getValue(m,i,j)){
-            printf("Erreur!La valeur n'a pas change!");
-            return;
-      }
-      else if(val==0){               //val=0,m[i,j]≠0,c-a-d le suppression d'un node
+      if(val==0){               //val=0,m[i,j]≠0,c-a-d le suppression d'un node
           if(pred(&(m.lignes[i]),it)!=NULL){     //supprimer un node entre deux autres nodes
               pred(&(m.lignes[i]),it)->next=it->next;
               free(it);
@@ -123,21 +121,24 @@ void putValue(struct matrice_creuse m,int i,int j,int val){
               m.lignes[i]=m.lignes[i]->next;
               free(e);
           }
-      }else if(val!=0){
+      }else{
           if(getValue(m,i,j)!=0){    //val≠0,m[i,j]≠0
               it->val=val;
           }else{        //val≠0,m[i,j]=0,c-a-d l'insertion d'un node
               liste_ligne it1=m.lignes[i];
-              liste_ligne it2=m.lignes[i]->next;
-              if(m.lignes[i]==NULL){   //si la liste est vide
-                    m.lignes[i]=creerNode(val,j);
-                    return;
-              }
               e=creerNode(val,j);
+              if(it1==NULL){   //si la liste est vide
+                    m.lignes[i]=e;
+              }
+              liste_ligne it2=m.lignes[i]->next;
               while(it1!=NULL){
                     if(it1->col>j){                //j(debut)->node->node->.....
                         e->next=m.lignes[i];
                         m.lignes[i]=e;
+                        break;
+                    }
+                    if((it1->col<j) && (it2==NULL)){     //node->node->j(fin)
+                        it1->next=e;                     //(pour ce cas,je sais pas pq ca marche pas QAQ)
                         break;
                     }
                     if((it1->col<j) && (it2->col>j)){   //node->node->j->node.....
@@ -145,12 +146,9 @@ void putValue(struct matrice_creuse m,int i,int j,int val){
                         it1->next=e;
                         break;
                     }
-                    if((it1->col<j) && (it1->next==NULL)){     //node->node->j(fin)
-                        it1->next=e;                     //(pour ce cas,je sais pas pq ca marche pas QAQ)
-                        break;
-                    }
+
                     it1=it1->next;
-                    it2=it2->next;
+                    if(it2!=NULL){it2=it2->next;}
                 }
 
           }
@@ -159,64 +157,74 @@ void putValue(struct matrice_creuse m,int i,int j,int val){
        afficherMat(m);
 }
 
+
 //Q5
 void addMat(struct matrice_creuse m1,struct matrice_creuse m2){
     liste_ligne e;
-    for(int i=0;i<m1.Nlignes;i++){              //pour chaqur ligne i,c'est la somme de deux liste chain¨¦ it1 et it2
+    liste_ligne fin=NULL;
+    for(int i=0;i<m1.Nlignes;i++){
         liste_ligne it1=m1.lignes[i];
         liste_ligne it2=m2.lignes[i];
-        if(it2==NULL){continue;}
-        for(int j=0;j<m1.Ncolonnes;j++){
-            if(it1->col==j+1 && it2->col==j+1){      // m1[i,j] et m2[i,j] existent,directement faire la somme et mettre la r¨¦sultat en m1[i,j]
-                  it1->val=it1->val+it2->val;
-                  it2=it2->next;     //c'est obligatoire de d¨¦placer le pointeur sur le node suivant quand il existe un node en [i,j],donc pour le jeme coloone,le pointeur toujours pointe le node que (col de node) >= j
+        while(it1!=NULL || it2!=NULL){      //le boucle ne s'arrete pas si it1 ou it2 est pas vide
+            if(it2 == NULL){             //si it2 est null,on n'a pas besion de changer it1
+                it1=it1->next;
+                continue;
+            }
+            if(it1 == NULL){       //si it1 est null,on doit ajouter un node dans la liste,c obligatoire de verifier que si la liste est vide ou pas
+                e=creerNode(it2->val,it2->col);
+                if(fin != NULL){      //pour le verifier,on ajoute un var de type liste_ligne 'fin',qui retourne le dernier node d'une liste,si la liste est vide,fin=null
+                    fin->next=e;
+                    fin=e;        //pour toutes les situations,on doit avancer fin
+                }
+                else{
+                    m1.lignes[i]=e;
+                    fin=m1.lignes[i];    //pour toutes les situations,on doit avancer fin
+                }
+                it1=fin->next;     //dans ce cas,pour continuer l'additon,on doit avancer it1 a fin->next(c-a-d null) et it2
+                it2=it2->next;
+                continue;
+            }
+            if(it1->col == it2->col){   //dans ce cas,on peut seulement changer la val de it1 et verifier que si la val==0 apres l'addition
+                it1->val=it1->val+it2->val;
                   if(it1->val==0){                     //si le nouveau val est 0,on doit supprimer ce node,ex:-1 + 1 = 0
                       if(pred(&(m1.lignes[i]),it1)!=NULL){     //supprimer un node entre deux autres nodes
                         e=it1->next;
                         pred(&(m1.lignes[i]),it1)->next=it1->next;
                         free(it1);
-                        it1=e;
+                        it1=e;   //avancer it1
                       }else{               //supprimer un node en tete de liste
                          e=m1.lignes[i];
                          m1.lignes[i]=m1.lignes[i]->next;
                          free(e);
-                         it1=m1.lignes[i];
+                         it1=m1.lignes[i];  //avancer it1
                       }
-                  }else{it1=it1->next;}
+                  }else{
+                      fin=it1;   //avancer fin
+                      it1=it1->next;
+                  }
+                  it2=it2->next;  //it1 et it2 ont participe a l'addition,donc on doit avancer tous les deux
+                  continue;
             }
-            else if(it1->col==j+1 && (it2->col>j+1 || it2==NULL)){   //m1[i,j]!=0,m2[i,j]=0,donc m1[i,j] ne pas changer
-                    it1=it1->next;
+            if(it1->col < it2->col){  //on ne change pas de it1,et puis avance it1 et fin
+                fin=it1;
+                it1=it1->next;
+                continue;
             }
-            else if((it1->col>j+1 || it1==NULL) && (it2->col==j+1)){                //m1[i,j]=0,m2[i,j]!=0,donc on doit ajouter un nouveau node e en it1,e.val=it2.val
-              liste_ligne it3=m1.lignes[i];                         //ce cas est similaire à putValue,on insert les nouveaux nodes dans m1
-              liste_ligne it4=m1.lignes[i]->next;
-              e=creerNode(it2->val,j+1);
-              if(m1.lignes[i]==NULL){
-                    m1.lignes[i]=creerNode(it2->val,j+1);
-              }
-              while(it3!=NULL){
-                    if(it1->col>j+1){
-                        e->next=m1.lignes[i];
-                        m1.lignes[i]=e;
-                        break;
-                    }
-                    if((it3->col<j+1) && (it4->col>j+1)){
-                        e->next=it4;
-                        it1->next=e;
-                        break;
-                    }
-                    if((it3->col<j+1) && (it3->next==NULL)){
-                        it3->next=e;
-                        break;
-                    }
-                    it3=it3->next;
-                    it4=it4->next;
+            if(it1->col > it2->col){  //dans ce cas on doit ajoute un nouveau node et avancer it2 et fin
+                e=creerNode(it2->val,it2->col);
+                if(pred(&(m1.lignes[i]),it1) == NULL){   //si on l'ajout en tete
+                    e->next=m1.lignes[i];
+                    m1.lignes[i]=e;
+                }else{
+                    pred(&(m1.lignes[i]),it1)->next=e;   //si on l'ajout entre 2 nodes
+                    e->next=it1;
                 }
+                fin=it1;
                 it2=it2->next;
             }
         }
     }
-    printf("La nouvelle matrice:\n");
+    printf("\nLa nouvelle matrice:\n\n");
     afficherMat(m1);
 }
 
@@ -227,7 +235,7 @@ int nombreOctetsGagnes(struct matrice_creuse m){
     for(int i=0;i<m.Nlignes;i++){
         liste_ligne it=m.lignes[i];
         while(it!=NULL){
-            res+=2*sizeof(int)+sizeof(int*);
+            res+=2*sizeof(int)+sizeof(element*);
             it=it->next;
         }
     }
