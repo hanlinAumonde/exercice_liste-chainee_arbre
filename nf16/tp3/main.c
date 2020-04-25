@@ -127,5 +127,5 @@ int main() {
       }
       printf("\n\n");
    }while(a!=0);
-
+   return 0;
 }
