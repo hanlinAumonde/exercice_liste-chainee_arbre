@@ -52,4 +52,25 @@ void ajoutElement(T_Arbre abr , int cle, int occ){
 }
 
 //Q4
-void afficherArbre
+void afficherArbre(T_Noeud *n){ //parcour infixe pour avoir les nbs dans l'ordre croissant
+    printf("\nTous les elements dans l'ordre croissant:\n");
+    if(n != NULL){
+        afficherArbre(n->gauche);
+        printf("val:%d / occurrence:%d\n",n->cle,n->nb_occ);
+        afficherArbre(n->droite);
+    }
+}
+
+//Q5
+T_Noeud *rechercherElement(T_Arbre abr , int val){
+    if(abr->Racine->cle == val){return abr->Racine;}
+    else{return NULL;}
+    if(val < abr->Racine->cle){
+        abr->Racine = abr->Racine->gauche;
+        return rechercherElement(abr,val);
+    }
+    if(val > abr->Racine->cle){
+        abr->Racine = abr->Racine->droite;
+        return rechercherElement(abr,val);
+    }
+}
