@@ -25,5 +25,5 @@ void afficherArbre(T_Noeud *n);
 
 T_Noeud *rechercherElement(T_Arbre *abr , int val);
 
-void decrementerElement(T_Arbre *abr);
+void decrementerElement(T_Arbre *abr,int cle);
 #endif
