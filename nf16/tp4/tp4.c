@@ -2,7 +2,7 @@
 
 //Q1
 T_Arbre* initABR() {
-    T_Arbre *abr = malloc(sizeof(T_Arbre));
+    T_Arbre *abr = malloc(sizeof(T_Noeud));
     abr=NULL;
     return abr;
 }
