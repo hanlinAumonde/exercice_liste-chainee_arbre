@@ -8,28 +8,28 @@ T_Arbre* initABR() {
 }
 
 //Q2
-T_Noeud *creerNoeud(int cle, int occ) {
+T_Noeud *creerNoeud(int cle) {
     T_Noeud *noeud = malloc(sizeof(T_Noeud));
     noeud->cle = cle;
-    noeud->nb_occ = occ;
+    noeud->nb_occ = 1;
     noeud->gauche = NULL;
     noeud->droite = NULL;
     return noeud;
 }
 
 //Q3
-void ajoutElement(T_Arbre *abr , int cle, int occ){
+void ajoutElement(T_Arbre *abr , int cle){
     if(abr == NULL){
-        abr->Racine = creerNoeud(cle,occ);
+        abr->Racine = creerNoeud(cle);
     }
     T_Noeud *it = abr->Racine;
         while(it != NULL){   //trouver la position pour ajout un nouveau noeud
             if(cle < it->cle){
-              if(it->gauche == NULL){it->gauche =creerNoeud(cle,occ);}
+              if(it->gauche == NULL){it->gauche =creerNoeud(cle);}
               else{it = it->gauche;}
             }
             else if(cle > it->cle){
-              if(it->droite == NULL){it->droite =creerNoeud(cle,occ);}
+              if(it->droite == NULL){it->droite =creerNoeud(cle);}
               else{it = it->droite;}
               }
         }
