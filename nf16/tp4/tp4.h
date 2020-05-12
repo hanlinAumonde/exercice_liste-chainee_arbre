@@ -17,9 +17,9 @@ typedef struct arbre{
 
 T_Arbre* initABR();
 
-T_Noeud *creerNoeud(int cle, int occ);
+T_Noeud *creerNoeud(int cle);
 
-void ajoutElement(T_Arbre *abr , int cle, int occ);
+void ajoutElement(T_Arbre *abr , int cle);
 
 void afficherArbre(T_Noeud *n);
 
