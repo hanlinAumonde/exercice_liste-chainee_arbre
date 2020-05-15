@@ -62,3 +62,38 @@ T_Noeud* rechercherElement(T_Arbre* abr,int val){
     }
     return NULL;
 }
+
+//Q6
+void decrementerElement(T_Arbre* abr,int cle){
+   T_Noeud* pere = NULL;
+   T_Noeud* it = abr->Racine;
+   while(it != NULL && it->cle != cle){
+      pere = it;
+      if(cle > it->cle) it = it->droite;
+      if(cle < it->cle) it = it->gauche;
+   }
+   it->nb_occ--;
+   if(it->nb_occ == 0){
+      T_Noeud* tmpG = it->gauche;
+      T_Noeud* tmpD = it->droite;
+      if(tmpG == NULL && tmpD == NULL){  //pas de fils
+         if(pere->gauche == it) pere->gauche = NULL;
+         if(pere->droite == it) pere->droite = NULL;
+         if(pere == NULL) abr->Racine = NULL;
+      }
+      if(tmpG != NULL && tmpD == NULL){  //un seul fil(gauche)
+         if(pere->gauche == it) pere->gauche = it->gauche;
+         if(pere->droite == it) pere->droite = it->gauche;
+         if(pere == NULL) abr->Racine = it->gauche;
+      }
+      if(tmpG == NULL && tmpD != NULL){  //un seul fil(droite)
+         if(pere->gauche == it) pere->gauche = it->droite;
+         if(pere->droite == it) pere->droite = it->droite;
+         if(pere == NULL) abr->Racine = it->droite;
+      }
+      if(tmpG != NULL && tmpD != NULL){
+
+      }
+      free(it);
+   }
+}
