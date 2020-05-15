@@ -74,25 +74,44 @@ void decrementerElement(T_Arbre* abr,int cle){
    }
    it->nb_occ--;
    if(it->nb_occ == 0){
-      T_Noeud* tmpG = it->gauche;
-      T_Noeud* tmpD = it->droite;
-      if(tmpG == NULL && tmpD == NULL){  //pas de fils
+      T_Noeud* tmpG = it->gauche;                     //on a besoin de verifier : 'it' c'est le fil gauche ou le fil droite de sa pere noeud?
+      T_Noeud* tmpD = it->droite;                     //c'est aussi possible que it est la racine de l'arbre
+      if(tmpG == NULL && tmpD == NULL){                                 //pas de fils
          if(pere->gauche == it) pere->gauche = NULL;
          if(pere->droite == it) pere->droite = NULL;
          if(pere == NULL) abr->Racine = NULL;
       }
-      if(tmpG != NULL && tmpD == NULL){  //un seul fil(gauche)
+      if(tmpG != NULL && tmpD == NULL){                                //un seul fil(gauche)
          if(pere->gauche == it) pere->gauche = it->gauche;
          if(pere->droite == it) pere->droite = it->gauche;
          if(pere == NULL) abr->Racine = it->gauche;
       }
-      if(tmpG == NULL && tmpD != NULL){  //un seul fil(droite)
+      if(tmpG == NULL && tmpD != NULL){                                   //un seul fil(droit)
          if(pere->gauche == it) pere->gauche = it->droite;
          if(pere->droite == it) pere->droite = it->droite;
          if(pere == NULL) abr->Racine = it->droite;
       }
-      if(tmpG != NULL && tmpD != NULL){
-
+      if(tmpG != NULL && tmpD != NULL){  //deux fils
+         T_Noeud* successeur;
+         T_Noeud* temp = tmpD;
+         T_Noeud* pere_succ = it;  //on doit supprimer le lien entre le pere de succ et succ aussi
+         while(temp->gauche != NULL){
+            pere_succ = temp;
+            temp = temp->gauche;
+         }
+         successeur = temp;  //si 'it' a deux fils,on peux facilement trouver son successeur dans le sous-arbre droite
+         if(pere_succ == it){    //c-a-d que le successeur de 'it',est exactement sa fil droit
+            successeur->gauche = tmpG;   //et pere_succ est exactement 'it',pcq on va free 'it' apres,donc on n'a pas besoin de supprimer le lien entre 'it' et successeur
+            successeur->droite = NULL;
+         }
+         else{
+            successeur->gauche = tmpG;
+            successeur->droite = tmpD;
+            pere_succ->gauche = NULL;
+         }
+         if(pere->gauche == it) pere->gauche = successeur;
+         if(pere->droite == it) pere->droite = successeur;
+         if(pere == NULL) abr->Racine = successeur;
       }
       free(it);
    }
