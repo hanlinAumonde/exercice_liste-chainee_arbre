@@ -44,7 +44,7 @@ void afficherArbre(T_Noeud* n){ //parcour infixe pour avoir les nbs dans l'ordre
     T_Noeud* it = n;
     if(it != NULL){
         afficherArbre(it->gauche);
-        printf("val:%d / occurrence:%d\t",it->cle,it->nb_occ);
+        printf("cle:%d / occurrence:%d\t",it->cle,it->nb_occ);
         printf("|\t");
         afficherArbre(it->droite);
     }
@@ -52,13 +52,11 @@ void afficherArbre(T_Noeud* n){ //parcour infixe pour avoir les nbs dans l'ordre
 
 //Q5
 T_Noeud* rechercherElement(T_Arbre* abr,int val){
-    T_Noeud* temp;
     T_Noeud* it = abr->Racine;
     while(it != NULL){
-        temp = it;
-        if(val == it->cle){return temp;}
-        if(val > it->cle){it = it->droite;}
-        if(val < it->cle){it = it->gauche;}
+        if(val == it->cle){return it;}
+        if(val < it->cle) it = it->gauche;
+        else it = it->droite;
     }
     return NULL;
 }
@@ -77,19 +75,19 @@ void decrementerElement(T_Arbre* abr,int cle){
       T_Noeud* tmpG = it->gauche;                     //on a besoin de verifier : 'it' c'est le fil gauche ou le fil droite de sa pere noeud?
       T_Noeud* tmpD = it->droite;                     //c'est aussi possible que it est la racine de l'arbre
       if(tmpG == NULL && tmpD == NULL){                                 //pas de fils
-         if(pere->gauche == it) pere->gauche = NULL;
-         if(pere->droite == it) pere->droite = NULL;
          if(pere == NULL) abr->Racine = NULL;
+         else if(pere->gauche == it) pere->gauche = NULL;
+         else if(pere->droite == it) pere->droite = NULL;
       }
       if(tmpG != NULL && tmpD == NULL){                                //un seul fil(gauche)
-         if(pere->gauche == it) pere->gauche = it->gauche;
-         if(pere->droite == it) pere->droite = it->gauche;
          if(pere == NULL) abr->Racine = it->gauche;
+         else if(pere->gauche == it) pere->gauche = it->gauche;
+         else if(pere->droite == it) pere->droite = it->gauche;
       }
       if(tmpG == NULL && tmpD != NULL){                                   //un seul fil(droit)
-         if(pere->gauche == it) pere->gauche = it->droite;
-         if(pere->droite == it) pere->droite = it->droite;
          if(pere == NULL) abr->Racine = it->droite;
+         else if(pere->gauche == it) pere->gauche = it->droite;
+         else if(pere->droite == it) pere->droite = it->droite;
       }
       if(tmpG != NULL && tmpD != NULL){  //deux fils
          T_Noeud* successeur;
@@ -109,10 +107,11 @@ void decrementerElement(T_Arbre* abr,int cle){
             successeur->droite = tmpD;
             pere_succ->gauche = NULL;
          }
-         if(pere->gauche == it) pere->gauche = successeur;
-         if(pere->droite == it) pere->droite = successeur;
          if(pere == NULL) abr->Racine = successeur;
+         else if(pere->gauche == it) pere->gauche = successeur;
+         else if(pere->droite == it) pere->droite = successeur;
       }
       free(it);
    }
 }
+
